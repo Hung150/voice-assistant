@@ -13,7 +13,7 @@ Trợ lý ảo điều khiển bằng giọng nói tiếng Việt, viết bằng
 | Thời tiết | "trợ lý ơi thời tiết ở đà nẵng" | Gọi API Open-Meteo (không cần key) |
 | Thoát | "trợ lý ơi dừng lại" | Tắt trợ lý |
 
-Hệ thống chỉ phản hồi khi nghe từ đánh thức **"trợ lý ơi"**. Có thể nói liền cả câu hoặc gọi trước, chờ trợ lý đáp rồi mới nói lệnh.
+Trợ lý chỉ phản hồi khi nghe từ đánh thức **"trợ lý ơi"**. Có thể nói liền cả câu, hoặc gọi trước, chờ trợ lý đáp "Dạ, tôi nghe đây" rồi mới nói lệnh.
 
 ## Kiến trúc
 
@@ -31,44 +31,43 @@ Micro -> Google Speech Recognition -> Wake word
 
 ```
 voice-assistant/
-├── gui.py              # Giao diện Tkinter (chạy file này)
-├── main.py             # Bản chạy trên terminal
-├── assistant.py        # Vòng lặp chính và xử lý lệnh (dùng chung)
-├── speech_input.py     # Nghe micro, nhận dạng giọng nói
-├── speech_output.py    # Phát giọng nói (edge-tts, dự phòng gTTS)
-├── nlp.py              # Wake word, intent, trích xuất thông tin
-├── actions.py          # Nhạc, tìm kiếm, giờ, báo thức
-├── weather.py          # Thời tiết (Open-Meteo)
-├── logger.py           # Ghi log câu nói vào command_log.csv
-├── intent_data.py      # Dữ liệu huấn luyện sinh từ mẫu câu
-├── train_intent.py     # Huấn luyện mô hình intent
-├── test_intent.py      # Thử mô hình
-├── test_nlp.py         # Thử toàn bộ phần NLP (không cần micro)
-└── intent_model.joblib # Mô hình đã huấn luyện (sinh ra sau khi train)
+├── gui.py               # Giao diện Tkinter (chạy file này)
+├── main.py              # Bản chạy trên terminal
+├── assistant.py         # Vòng lặp chính và xử lý lệnh (dùng chung)
+├── speech_input.py      # Nghe micro, nhận dạng giọng nói
+├── speech_output.py     # Phát giọng nói (edge-tts, dự phòng gTTS)
+├── nlp.py               # Wake word, intent, trích xuất thông tin
+├── actions.py           # Nhạc, tìm kiếm, giờ, báo thức
+├── weather.py           # Thời tiết (Open-Meteo)
+├── logger.py            # Ghi log câu nói vào command_log.csv
+├── intent_data.py       # Dữ liệu huấn luyện sinh từ mẫu câu
+├── train_intent.py      # Huấn luyện mô hình intent
+├── intent_model.joblib  # Mô hình đã huấn luyện
+├── requirements.txt     # Danh sách thư viện
+└── README.md
 ```
+
+`command_log.csv` được tạo tự động khi dùng trợ lý (không đưa lên Git).
 
 ## Cài đặt
 
 Yêu cầu: Python 3.9+, micro, loa hoặc tai nghe, kết nối internet.
 
 ```bash
-# 1. Tạo và kích hoạt môi trường ảo
+# 1. Tải dự án
+git clone https://github.com/Hung150/voice-assistant.git
+cd voice-assistant
+
+# 2. Tạo và kích hoạt môi trường ảo
 python -m venv venv
 venv\Scripts\activate          # Windows (cmd)
 # source venv/bin/activate     # macOS / Linux
 
-# 2. Cài thư viện
+# 3. Cài thư viện
 pip install -r requirements.txt
-
-# 3. Huấn luyện mô hình intent (chỉ cần làm lần đầu)
-python train_intent.py
 ```
 
-Nếu chưa có `requirements.txt`, tạo bằng `pip freeze > requirements.txt`, hoặc cài trực tiếp:
-
-```bash
-pip install SpeechRecognition pyaudio pygame gTTS edge-tts wikipedia requests scikit-learn
-```
+Mô hình `intent_model.joblib` đã có sẵn. Nếu muốn huấn luyện lại, chạy `python train_intent.py`.
 
 **Lỗi cài PyAudio trên Windows:** thử `pip install pipwin` rồi `pipwin install pyaudio`.
 
@@ -87,7 +86,7 @@ Nên **đeo tai nghe** khi dùng để micro không thu lại giọng của tr�
 2. Mở file bằng Excel, điền cột `label` bằng intent đúng: `play_music`, `search`, `set_alarm`, `get_time`, `weather`, `exit`, `unknown`.
 3. Chạy lại `python train_intent.py`. Mô hình sẽ học thêm từ các câu đã gán nhãn.
 
-Nếu một câu bị hiểu sai, có thể thêm mẫu câu tương tự vào `intent_data.py` rồi train lại.
+Nếu một câu bị hiểu sai, có thể thêm mẫu câu tương tự vào `intent_data.py` rồi huấn luyện lại.
 
 ## Tùy chỉnh
 
