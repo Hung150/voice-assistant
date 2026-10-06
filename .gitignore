@@ -1,0 +1,15 @@
+# Môi trường ảo và cache
+venv/
+__pycache__/
+*.pyc
+
+# File chứa những gì bạn đã nói, không nên đưa lên mạng
+command_log.csv
+
+# Khóa bí mật (nếu sau này dùng)
+.env
+
+# File tạm của hệ điều hành và editor
+.DS_Store
+Thumbs.db
+.vscode/
